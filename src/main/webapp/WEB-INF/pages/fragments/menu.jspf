@@ -1,0 +1,24 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<div class="col-md-2">
+    <ul>
+        <li><a href="<c:url value="/server/list" />">Сървъри</a></li>
+        <li><a href="<c:url value="/server/create" />">Нов сървър</a></li>
+        <li><a href="<c:url value="/appinfo/list" />">Пинг конфиг.</a></li>
+        <li><a href="<c:url value="/appinfo/create" />">Нова пинг конфиг.</a></li>
+        <li><a href="<c:url value="/notificationChannel/list" />">Нотификационни канали</a></li>
+        <li><a href="<c:url value="/notificationgroup/list" />">Нотификационни групи</a></li>
+        <li><a href="<c:url value="/notificationgroup/create" />">Нова нотиф. група</a></li>
+        <li><a href="<c:url value="/resourcePolicy/list" />">Списък ресурсни конфиг.</a></li>
+        <li><a href="<c:url value="/resourcePolicy/create" />">Нова ресурсна конфиг.</a></li>
+        <sec:authorize access="hasRole('ADMIN')">
+            <li><a href="<c:url value="/user/list" />">Потребители</a></li>
+            <li><a href="<c:url value="/user/create" />">Нов потребител</a></li>
+        </sec:authorize>
+        <c:url var="logoutUrl" value="/logout" />
+        <form action="${logoutUrl}" id="logout" method="post">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
+        <a href="#" onclick="document.getElementById('logout').submit();">Изход</a>
+    </ul>
+</div>
