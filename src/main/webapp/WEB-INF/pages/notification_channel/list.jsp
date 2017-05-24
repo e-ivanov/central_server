@@ -25,8 +25,7 @@
         <link href="<c:url value="/static/css/bootstrap.min.css" />" rel="stylesheet">
         <link href="<c:url value="/static/css/style.css" />" rel="stylesheet">
         <script>var ctx = "${pageContext.request.contextPath}"</script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
-
+        <script src="<c:url value="/static/js/mustache.min.js" />"></script>
 
     </head>
     <body>

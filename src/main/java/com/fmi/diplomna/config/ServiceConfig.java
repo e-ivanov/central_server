@@ -155,35 +155,37 @@ public class ServiceConfig {
         return admin;
     }
 
-    @Bean(name = "statistics")
-    @Qualifier("statistics")
+    @Qualifier("statistics_queue")
+    @Bean
     public Queue statisticsQueue() {
         return new Queue(env.getProperty("rabbitmq.queuename"), false, true, true);
     }
     
-    @Bean(name = "notification")
-    @Qualifier("notification")
+    @Qualifier("notification_queue")
+    @Bean
     public Queue notificationQueue(){
         return new Queue(env.getProperty("rabbitmq.notification_queue"), true, false, false);
     }
     
+    @Qualifier("statistics_exchange")
     @Bean
-    public TopicExchange getExchange() {
-        return new TopicExchange(env.getProperty("rabbitmq.exchange_name"), false, false);
+    public DirectExchange getExchange() {
+        return new DirectExchange(env.getProperty("rabbitmq.exchange_name"), false, false);
     }
     
+    @Qualifier("notification_exchange")
     @Bean
     public DirectExchange getNotificationExchange(){
         return new DirectExchange(env.getProperty("rabbitmq.notification_exchange"), true, false);
     }
 
     @Bean
-    Binding getBinding(@Qualifier("statistics")Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("#");
+    Binding getBinding(@Qualifier("statistics_queue")Queue queue, @Qualifier("statistics_exchange") DirectExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).withQueueName();
     }
     
     @Bean 
-    Binding getNotificationBinding(@Qualifier("notification")Queue queue, DirectExchange exchange){
+    Binding getNotificationBinding(@Qualifier("notification_queue")Queue queue, @Qualifier("notification_exchange")DirectExchange exchange){
         return BindingBuilder.bind(queue).to(exchange).withQueueName();
     }
 
@@ -193,7 +195,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public SimpleMessageListenerContainer listenerContainer(@Qualifier("statistics")Queue queue) {
+    public SimpleMessageListenerContainer listenerContainer(@Qualifier("statistics_queue")Queue queue) {
         SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer();
         listenerContainer.setConnectionFactory(connectionFactory());
         listenerContainer.setQueues(queue);

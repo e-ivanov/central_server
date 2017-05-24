@@ -87,12 +87,12 @@
                 server_view.initialize();
 
 
-                var ws = new SockJS('http://127.0.0.1:15674/stomp');
+                var ws = new SockJS('http://${rabbit_address}:15674/stomp');
                 var client = Stomp.over(ws);
                 var on_connect = function () {
                     console.log('connected successfully')
-                    var headers = {durable: false, "auto-delete": true, exclusive: true};
-                    client.subscribe('/exchange/server_data/server_${server_id}', function (d) {
+                    var headers = {durable: false, "auto-delete": false, exclusive: false};
+                    client.subscribe('/exchange/server_data_stat/server_${server_id}', function (d) {
                         doUpdate(JSON.parse(d.body));
                     }, headers);
 

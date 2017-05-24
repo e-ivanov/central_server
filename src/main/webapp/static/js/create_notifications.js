@@ -39,7 +39,7 @@ $(document).on("click", "#mail_list_container form.form-horizontal button", func
     
     
 function updateExistingElement(formUrl, formData, parentToDelete){
-    $.post({url: formUrl, type: 'post', data: formData, datatype: 'json', function (response) {
+    $.ajax({url: formUrl, type: 'post', data: formData, datatype: 'json', function (response) {
             if (response.status == 'FAIL') {
                 alert("Fail")
             } else {
@@ -51,15 +51,6 @@ function updateExistingElement(formUrl, formData, parentToDelete){
         }, headers: {header: token} });
 }
 
-function deleteElement(){
-    $.ajax({url: formUrl, type: 'post', data: formData, datatype: 'json', function (response) {
-        if (response.status == 'FAIL') {
-            alert("Fail")
-        } else {
-            alert("Success")
-        }
-    }, headers: {header: token}});
-}
 
 function submitNewElementForm(formData, formUrl, formTemplate, modalId, containerId){
         $.ajax({url: formUrl, type: 'post', data: formData, datatype: 'json', function (response) {

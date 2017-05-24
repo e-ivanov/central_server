@@ -20,6 +20,7 @@ import org.joda.time.DateTime;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,6 +36,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/server")
 public class ServerController {
 
+    
+    @Value("${rabbitmq.server_ip}")
+    private String rabbitAddress;
+    
     @Autowired
     private ServerService serverService;
     
@@ -85,6 +90,7 @@ public class ServerController {
         DateTime date = DateTime.now().minusMinutes(25);
         model.addAttribute("perf_data", sensorReadingRepository.filterByServerAndDate(id, date));
         model.addAttribute("server_id", id);
+        model.addAttribute("rabbit_address",rabbitAddress);
         return "server/view";
     }
 
