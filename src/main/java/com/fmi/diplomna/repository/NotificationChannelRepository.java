@@ -5,12 +5,13 @@
  */
 package com.fmi.diplomna.repository;
 
-import com.fmi.diplomna.hibernate.EmailNotification;
+import com.fmi.diplomna.hibernate.NotificationChannel;
+
 
 /**
  *
  * @author killer
  */
-public interface EmailNotificationRepository extends GenericCRUDInterface<EmailNotification>{
+public interface NotificationChannelRepository extends GenericCRUDInterface<NotificationChannel>{
     
 }

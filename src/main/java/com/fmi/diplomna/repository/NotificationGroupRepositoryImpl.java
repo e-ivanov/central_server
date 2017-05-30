@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class NotificationGroupRepositoryImpl extends GenericCRUDRepository<NotificationGroup> implements NotificationGroupRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(NotificationRepositoryImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(NotificationChannelRepositoryImpl.class);
 
 }

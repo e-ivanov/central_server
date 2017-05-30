@@ -6,7 +6,7 @@
 package com.fmi.diplomna.converters;
 
 import com.fmi.diplomna.hibernate.NotificationChannel;
-import com.fmi.diplomna.services.EmailNotificationService;
+import com.fmi.diplomna.services.NotificationChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 
@@ -17,11 +17,11 @@ import org.springframework.core.convert.converter.Converter;
 public class NotificationChannelConvertor implements Converter<String, NotificationChannel>{
     
     @Autowired
-    private EmailNotificationService emailNotificationService;
+    private NotificationChannelService notificationChannelService;
 
     @Override
     public NotificationChannel convert(String s) {
-        return emailNotificationService.load(Long.parseLong(s));
+        return notificationChannelService.load(Long.parseLong(s));
     }
     
 }

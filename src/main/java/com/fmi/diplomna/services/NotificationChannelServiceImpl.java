@@ -5,24 +5,23 @@
  */
 package com.fmi.diplomna.services;
 
-import com.fmi.diplomna.hibernate.EmailNotification;
-import com.fmi.diplomna.repository.EmailNotificationRepository;
+import com.fmi.diplomna.hibernate.NotificationChannel;
+import com.fmi.diplomna.repository.NotificationChannelRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.fmi.diplomna.repository.NotificationRepository;
 
-@Service
 @Transactional
-public class EmailNotificationServiceImpl implements EmailNotificationService {
-
-    @Autowired
-    private EmailNotificationRepository emailNotificationRepository;
+@Service
+public class NotificationChannelServiceImpl implements NotificationChannelService {
     
+    @Autowired
+    private NotificationChannelRepository repository;
+
     @Override
-    public void delete(EmailNotification entity) {
-        emailNotificationRepository.delete(entity);
+    public void delete(NotificationChannel entity) {
+        repository.delete(entity);
     }
 
     @Override
@@ -31,22 +30,22 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
     }
 
     @Override
-    public EmailNotification load(long id) {
-        return emailNotificationRepository.load(id);
+    public NotificationChannel load(long id) {
+        return repository.load(id);
     }
 
     @Override
-    public List<EmailNotification> loadAll() {
-        return emailNotificationRepository.loadAll();
+    public List<NotificationChannel> loadAll() {
+        return repository.loadAll();
     }
 
     @Override
-    public void save(EmailNotification entity) {
-        emailNotificationRepository.save(entity);
+    public void save(NotificationChannel entity) {
+        repository.save(entity);
     }
 
     @Override
-    public void saveAll(List<EmailNotification> items) {
+    public void saveAll(List<NotificationChannel> items) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

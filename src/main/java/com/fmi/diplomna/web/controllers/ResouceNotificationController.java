@@ -11,7 +11,7 @@ import com.fmi.diplomna.hibernate.ResourceNotificationPolicy;
 import com.fmi.diplomna.hibernate.Server;
 import com.fmi.diplomna.repository.ResourceNotificationPolicyRepository;
 import com.fmi.diplomna.repository.ServerRepository;
-import com.fmi.diplomna.services.EmailNotificationService;
+import com.fmi.diplomna.services.NotificationChannelService;
 import com.fmi.diplomna.services.ResourceNotificationPolicyService;
 import com.fmi.diplomna.services.ServerService;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ResouceNotificationController {
     private ServerService serverService;
     
     @Autowired
-    private EmailNotificationService emailNotificationService;
+    private NotificationChannelService notificationChannelService;
     
     @ModelAttribute("serverlist")
     public List<Server> getServerList(){
@@ -46,8 +46,8 @@ public class ResouceNotificationController {
     }
     
     @ModelAttribute("notificationchannellist")
-    public List<EmailNotification> getNotificationChannels(){
-        return emailNotificationService.loadAll();
+    public List<NotificationChannel> getNotificationChannels(){
+        return notificationChannelService.loadAll();
     }
     
     @RequestMapping("/list")

@@ -5,14 +5,14 @@
  */
 package com.fmi.diplomna.repository;
 
-import com.fmi.diplomna.dto.NotificationChannel;
+import com.fmi.diplomna.hibernate.NotificationChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class NotificationRepositoryImpl extends GenericCRUDRepository<NotificationChannel>implements NotificationRepository {
+public class NotificationChannelRepositoryImpl extends GenericCRUDRepository<NotificationChannel>implements NotificationChannelRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(NotificationRepositoryImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(NotificationChannelRepositoryImpl.class);
 
 }

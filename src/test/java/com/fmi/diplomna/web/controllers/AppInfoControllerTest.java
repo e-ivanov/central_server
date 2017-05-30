@@ -11,7 +11,7 @@ import com.fmi.diplomna.config.SecurityConfig;
 import com.fmi.diplomna.config.ServiceConfig;
 import com.fmi.diplomna.hibernate.AppInfo;
 import com.fmi.diplomna.services.AppInfoService;
-import com.fmi.diplomna.services.EmailNotificationService;
+import com.fmi.diplomna.services.NotificationChannelService;
 import com.fmi.diplomna.services.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class AppInfoControllerTest {
     private UserService userService;
 
     @Mock
-    private EmailNotificationService emailNotificationService;
+    private NotificationChannelService notificationChannelService;
     
     @Spy
     private List<AppInfo> infos = new ArrayList<>();

@@ -6,8 +6,7 @@
 package com.fmi.diplomna.web.controllers;
 
 import com.fmi.diplomna.hibernate.EmailNotification;
-import com.fmi.diplomna.repository.EmailNotificationRepository;
-import com.fmi.diplomna.services.EmailNotificationService;
+import com.fmi.diplomna.services.NotificationChannelService;
 import com.fmi.diplomna.web.response.AjaxFormResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,11 +26,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class NotificationChannelController {
 
     @Autowired
-    private EmailNotificationService emailNotificationService;
+    private NotificationChannelService notificationChannelService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listNotificationChannels(Model model) {
-        model.addAttribute("emailnotificationlist", emailNotificationService.loadAll());
+        model.addAttribute("emailnotificationlist", notificationChannelService.loadAll());
         model.addAttribute("newEmailNotification", new EmailNotification());
         return "notification_channel/list";
     }
@@ -47,7 +46,7 @@ public class NotificationChannelController {
             response.setErrorMessageList(bindingResult.getFieldErrors());
             return response;
         } else {
-            emailNotificationService.save(notification);
+            notificationChannelService.save(notification);
             response.setStatus("SUCCESS");
             response.setPayload(notification);
         }
@@ -67,7 +66,7 @@ public class NotificationChannelController {
             response.setErrorMessageList(bindingResult.getFieldErrors());
             return response;
         } else {
-            emailNotificationService.save(notification);
+            notificationChannelService.save(notification);
             response.setStatus("SUCCESS");
             response.setPayload(notification);
         }
@@ -81,7 +80,7 @@ public class NotificationChannelController {
             BindingResult bindingResult
     ) {
         AjaxFormResponse response = new AjaxFormResponse();
-        emailNotificationService.delete(notification);
+        notificationChannelService.delete(notification);
         return response;
     }
 }
