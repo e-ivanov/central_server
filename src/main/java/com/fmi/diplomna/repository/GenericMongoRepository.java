@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
  *
  * @author killer
  */
-public class GenerictMongoRepository<T> implements GenericCRUDInterface<T>{
+public class GenericMongoRepository<T> implements GenericCRUDInterface<T>{
     
     private final Class<T> clazz = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass())
 				.getActualTypeArguments()[0];

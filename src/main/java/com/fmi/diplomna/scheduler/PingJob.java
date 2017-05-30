@@ -9,6 +9,9 @@ import com.fmi.diplomna.domain.services.CheckType;
 import com.fmi.diplomna.domain.services.NotificationFactory;
 import com.fmi.diplomna.dto.NotificationDTO;
 import com.fmi.diplomna.dto.NotificationType;
+import com.fmi.diplomna.hibernate.AppInfo;
+import com.fmi.diplomna.listeners.NotificationSender;
+import com.fmi.diplomna.services.AppInfoService;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,8 +26,10 @@ import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.data.mongodb.core.WriteResultChecking.LOG;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 /**
  *
@@ -43,20 +48,25 @@ public class PingJob implements Job {
     private int hearthbeatInterval = -1;
     private int unresponsiveInterval = -1;
     private int secondsBetweenNotifications;
+    private long appInfoId;
+
+    @Autowired
+    private AppInfoService appInfoService;
+    @Autowired 
+    private NotificationSender notificationSender;
 
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+        logger.info("the job is called");
         JobDataMap dataMap = jec.getJobDetail().getJobDataMap();
-        DateTime now = (DateTime) dataMap.get("last_successful_ping");
         try {
             final String targetUrl = assembleUrl();
             final URLConnection connection = new URL(targetUrl).openConnection();
-            logger.info("Trying to connect to: " + targetUrl);
             connection.connect();
-            logger.info("Service " + targetUrl + " available, yeah!");
             dataMap.put("is_down", false);
             dataMap.put("last_successful_ping", DateTime.now());
-            dataMap.remove("last_unsuccessful_ping");
+            dataMap.remove("first_unsuccessful_ping");
             dataMap.remove("last_unavailable_notification");
         } catch (final MalformedURLException e) {
             logger.error("Malformed URL! " + e);
@@ -65,17 +75,19 @@ public class PingJob implements Job {
             logger.info("Service " + url + " unavailable, oh no!", e);
             dataMap.put("is_down", true);
             //This will be called for the first time when the service is unresponsive
-            if (dataMap.get("last_unsuccessful_ping") == null) {
-                dataMap.put("last_unsuccessful_ping", DateTime.now());
+            if (dataMap.get("first_unsuccessful_ping") == null) {
+                dataMap.put("first_unsuccessful_ping", DateTime.now());
                 return;
             }
-            
-            if(canSendNotification(dataMap)){
-//                NotificationDTO dto = NotificationFactory.buildNotification(server, NotificationType.CRITICAL, CheckType.AVAILABILITY)
-            }else{
+
+            if (canSendNotification(dataMap)) {
+                AppInfo info = appInfoService.load(getAppInfoId());
+                NotificationDTO dto = NotificationFactory.buildAvailabilityNotification(info, NotificationType.CRITICAL, CheckType.AVAILABILITY);
                 dataMap.put("last_unavailable_notification", DateTime.now());
-                dataMap.put("last_unsuccessful_ping", DateTime.now());
+                submitNotification(dto);
                 logger.info("Notification was send");
+            } else {
+
             }
 
             logger.info("Job was called!");
@@ -159,14 +171,24 @@ public class PingJob implements Job {
         this.secondsBetweenNotifications = secondsBetweenNotifications;
     }
 
+    public long getAppInfoId() {
+        return appInfoId;
+    }
+
+    public void setAppInfoId(long appInfoId) {
+        this.appInfoId = appInfoId;
+    }
+
     private boolean canSendNotification(JobDataMap dataMap) {
 
-        DateTime lastUnsuccessfulPing = (DateTime) dataMap.get("last_unsuccessful_ping");
+        DateTime lastUnsuccessfulPing = (DateTime) dataMap.get("first_unsuccessful_ping");
         Seconds secDiff = Seconds.secondsBetween(lastUnsuccessfulPing, DateTime.now());
         logger.info("The main diff in seconds is: " + secDiff.getSeconds());
         logger.info("The unresponsive interval is: " + getUnresponsiveInterval());
         if (secDiff.getSeconds() >= getUnresponsiveInterval()) {
+            logger.info("Inside the evaluation block");
             DateTime lastNotification = (DateTime) dataMap.get("last_unavailable_notification");
+            logger.info("The last notification is :"+lastNotification);
             if (lastNotification != null) {
                 Seconds seconds = Seconds.secondsBetween(lastNotification, DateTime.now());
                 logger.info("The diff in seconds is: " + seconds.getSeconds());
@@ -174,29 +196,32 @@ public class PingJob implements Job {
                 if (seconds.getSeconds() >= getSecondsBetweenNotifications()) {
                     //Send notification
                     dataMap.put("last_unavailable_notification", DateTime.now());
-                    dataMap.put("last_unsuccessful_ping", DateTime.now());
+//                    dataMap.put("first_unsuccessful_ping", DateTime.now());
+                    logger.info("should send notification");
                     return true;
                 } else {
                     logger.info("It is too early to send notification");
                     return false;
                 }
-            }else{
-                return false;
-            } 
-        }else{
+            } else {
+                logger.info("should send notification");
+                return true;
+            }
+        } else {
             return false;
         }
 
     }
 
-    private String assembleNotificatonContent(){
+    private String assembleNotificatonContent() {
         StringBuilder builder = new StringBuilder();
         builder.append("Недостъпен сървъс с адрес: ");
         builder.append(getUrl());
         return builder.toString();
     }
-    
-    private void submitNotification() {
 
+    private void submitNotification(NotificationDTO dto) {
+        logger.info("AVAILABILITY------------" + dto.toString());
+        notificationSender.send(dto);
     }
 }

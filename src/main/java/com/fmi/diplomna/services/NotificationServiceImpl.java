@@ -10,6 +10,7 @@ import com.fmi.diplomna.domain.services.BuildNotificationService;
 import com.fmi.diplomna.domain.services.CheckType;
 import com.fmi.diplomna.domain.services.NotificationData;
 import com.fmi.diplomna.hibernate.ResourceNotificationPolicy;
+import com.fmi.diplomna.hibernate.Server;
 import com.fmi.diplomna.listeners.NotificationInfo;
 import com.fmi.diplomna.listeners.NotificationStatisticsCache;
 import org.joda.time.DateTime;
@@ -33,8 +34,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void checkNotification(SensorReading reading, NotificationInfo info) {
-        ResourceNotificationPolicy policy = serverService
-                .load(reading.getServerId()).getNotificationPolicy();
+        
+        Server server = serverService.load(reading.getServerId());
+        if(server == null)return;
+        ResourceNotificationPolicy policy = server.getNotificationPolicy();
+        if(policy == null)return;
 
         DateTime currDate = DateTime.now();
 

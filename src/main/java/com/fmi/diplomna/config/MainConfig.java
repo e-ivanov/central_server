@@ -8,6 +8,7 @@ package com.fmi.diplomna.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fmi.diplomna.converters.AppInfoConverter;
 import com.fmi.diplomna.converters.DateTimeConverter;
+import com.fmi.diplomna.converters.NotificationChannelConvertor;
 import com.fmi.diplomna.converters.NotificationGroupConvertor;
 import com.fmi.diplomna.converters.ResourcePolicyConverter;
 import com.fmi.diplomna.converters.ServerConverter;
@@ -113,8 +114,14 @@ public class MainConfig extends WebMvcConfigurerAdapter {
         registry.addConverter(getNotificationGroupConvertor());
         registry.addConverter(getJodaDateTimeConverter());
         registry.addConverter(getUserRoleConvertor());
+        registry.addConverter(getNotificationChannelConverter());
     }
 
+    @Bean
+    public NotificationChannelConvertor getNotificationChannelConverter(){
+        return new NotificationChannelConvertor();
+    }
+    
     @Bean
     public ResourcePolicyConverter getResourcePolicyConverter() {
         return new ResourcePolicyConverter();

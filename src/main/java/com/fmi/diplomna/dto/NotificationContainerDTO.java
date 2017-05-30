@@ -11,8 +11,11 @@ package com.fmi.diplomna.dto;
  */
 public class NotificationContainerDTO {
     
-    private final String target;
-    private final NotificationChannel notificationChannel;
+    private String target;
+    private NotificationChannel notificationChannel;
+    
+    public NotificationContainerDTO() {
+    }
 
     public NotificationContainerDTO(String target, NotificationChannel notificationChannel) {
         this.target = target;

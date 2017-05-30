@@ -87,7 +87,7 @@ public class ServerController {
     
     @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
     public String viewServer(@PathVariable("id") long id, Model model){
-        DateTime date = DateTime.now().minusMinutes(25);
+        DateTime date = DateTime.now().minusHours(7);
         model.addAttribute("perf_data", sensorReadingRepository.filterByServerAndDate(id, date));
         model.addAttribute("server_id", id);
         model.addAttribute("rabbit_address",rabbitAddress);

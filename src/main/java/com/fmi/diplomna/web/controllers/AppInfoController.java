@@ -7,9 +7,11 @@ package com.fmi.diplomna.web.controllers;
 
 import com.fmi.diplomna.hibernate.AppInfo;
 import com.fmi.diplomna.hibernate.EmailNotification;
+import com.fmi.diplomna.hibernate.NotificationGroup;
 import com.fmi.diplomna.hibernate.User;
 import com.fmi.diplomna.services.AppInfoService;
 import com.fmi.diplomna.services.EmailNotificationService;
+import com.fmi.diplomna.services.NotificationGroupService;
 import com.fmi.diplomna.services.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class AppInfoController {
     @Autowired
     private EmailNotificationService emailNotificationService;
     
+    @Autowired
+    private NotificationGroupService notificationGroupService;
+    
     @ModelAttribute("userList")
     private List<User> getUserList(){
         return userService.loadAll();
@@ -45,6 +50,11 @@ public class AppInfoController {
     @ModelAttribute("notificatonList")
     private List<EmailNotification> getNotifications(){
         return emailNotificationService.loadAll();
+    }
+    
+    @ModelAttribute("notificationGroupsList")
+    private List<NotificationGroup> getNotificationGroups(){
+        return notificationGroupService.loadAll();
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)

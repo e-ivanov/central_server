@@ -50,9 +50,6 @@ public class StatisticsInfoListener implements MessageListener {
     private ProcessInfoRepository processRepository;
 
     @Autowired
-    private ServerService serverService;
-
-    @Autowired
     private ObjectMapper jsonMessageConvertor;
 
     @Autowired

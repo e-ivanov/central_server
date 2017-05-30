@@ -42,15 +42,30 @@ public class AppInfoRepositoryImpl extends GenericCRUDRepository<AppInfo>impleme
     private static final Logger logger = LoggerFactory.getLogger(AppInfoRepositoryImpl.class);
 
     @Autowired
-    private SessionFactory sessionFactory;
-
-
-    @Autowired
     protected HibernateTransactionManager txManager;
 
 
     @Autowired
     private Scheduler scheduler;
+    
+    @PostConstruct
+    private void init(){
+        TransactionTemplate tmpl = new TransactionTemplate(txManager);
+        tmpl.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus ts) {
+                List<AppInfo> infos = loadAll();
+                for(AppInfo info : infos){
+                    try {
+                        addNewJob(info);
+                        logger.info("Initialized job with id: "+info.getId());
+                    } catch (SchedulerException ex) {
+                        java.util.logging.Logger.getLogger(AppInfoRepositoryImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+    }
 
 
 
@@ -131,6 +146,7 @@ public class AppInfoRepositoryImpl extends GenericCRUDRepository<AppInfo>impleme
         builder.usingJobData("hearthbeatInterval", job.getHearthbeatInterval());
         builder.usingJobData("unresponsiveInterval", job.getUnresponsiveInterval());
         builder.usingJobData("secondsBetweenNotifications", job.getNotificationInterval());
+        builder.usingJobData("appInfoId", job.getId());
         JobDetail jobDetail = builder.build();
         return jobDetail;
     }

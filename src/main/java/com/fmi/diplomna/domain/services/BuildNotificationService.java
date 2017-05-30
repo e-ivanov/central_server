@@ -12,6 +12,7 @@ import com.fmi.diplomna.dto.NotificationType;
 import com.fmi.diplomna.hibernate.ResourceNotificationPolicy;
 import com.fmi.diplomna.hibernate.Server;
 import com.fmi.diplomna.listeners.NotificationInfo;
+import com.fmi.diplomna.listeners.NotificationSender;
 import com.fmi.diplomna.listeners.StatisticsInfoListener;
 import com.fmi.diplomna.listeners.StatisticsUtils;
 import com.fmi.diplomna.repository.SensorReadingRepository;
@@ -41,9 +42,11 @@ public class BuildNotificationService {
     private SensorReadingRepository sensorReadingRepository;
     
     @Autowired 
-    private RabbitTemplate rabbitTemplate;
+    private NotificationSender notificationSender;
+
 
     public void processReading(NotificationData info) {
+        logger.info("Processing notification Data");
         boolean canSendNotification = true;
         int resendInterval = 25;
         DateTime latestNotification = getLatestNotification(info);
@@ -68,9 +71,9 @@ public class BuildNotificationService {
         
         NotificationDTO dto = null;
         if (StatisticsUtils.calculatePcnt(readings, info) >= info.getNotificationConfig().getCriticalLevel()) {
-//            dto = NotificationFactory.buildNotification(server, NotificationType.CRITICAL, info.getType());
+            dto = NotificationFactory.buildResourceUsageNotification(server, NotificationType.CRITICAL, info.getType());
         } else if (StatisticsUtils.calculatePcnt(readings, info) >= info.getNotificationConfig().getWarnLevel()) {
-//            dto = NotificationFactory.buildNotification(server, NotificationType.WARN, info.getType());
+            dto = NotificationFactory.buildResourceUsageNotification(server, NotificationType.WARN, info.getType());
         }
         if(dto != null){
             setLatestNotification(info);
@@ -81,7 +84,7 @@ public class BuildNotificationService {
 
     private void sendNotification(NotificationDTO notificationDTO) {
         logger.info(notificationDTO.toString());
-        rabbitTemplate.convertAndSend(notificationDTO);
+        notificationSender.send(notificationDTO);
 
     }
     

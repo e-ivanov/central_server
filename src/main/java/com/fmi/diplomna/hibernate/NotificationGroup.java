@@ -51,6 +51,11 @@ public class NotificationGroup implements Serializable {
         @JoinColumn(name = "user_id", referencedColumnName = "id")})
     @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private Set<User> userSet;
+    @JoinTable(name = "app_info_has_notification_group", joinColumns = {
+        @JoinColumn(name = "notification_group_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "app_info_id", referencedColumnName = "id")})
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    private Set<AppInfo> appInfoSet;
 
     public NotificationGroup() {
     }
@@ -94,6 +99,14 @@ public class NotificationGroup implements Serializable {
 
     public void setUserSet(Set<User> userSet) {
         this.userSet = userSet;
+    }
+
+    public Set<AppInfo> getAppInfoSet() {
+        return appInfoSet;
+    }
+
+    public void setAppInfoSet(Set<AppInfo> appInfoSet) {
+        this.appInfoSet = appInfoSet;
     }
 
     @Override

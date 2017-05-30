@@ -10,22 +10,26 @@ import com.fmi.diplomna.dto.NotificationContainerDTO;
 import com.fmi.diplomna.dto.NotificationDTO;
 import com.fmi.diplomna.dto.NotificationDTOBuilder;
 import com.fmi.diplomna.dto.NotificationType;
+import com.fmi.diplomna.hibernate.AppInfo;
 import com.fmi.diplomna.hibernate.NotificationGroup;
 import com.fmi.diplomna.hibernate.Server;
 import com.fmi.diplomna.hibernate.User;
 import com.fmi.diplomna.listeners.StatisticsUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author killer
  */
+@Component
 public class NotificationFactory {
 
     public static NotificationDTO buildResourceUsageNotification(Server server, NotificationType type, CheckType checkType) {
         NotificationDTO dto = new NotificationDTOBuilder()
-                .setNotifContainers(buildRecipients(server, type))
+                .setNotifContainers(buildRecipientsFromServer(server, type))
                 .setServerId(String.valueOf(server.getId()))
                 .setType(type)
                 .setContent(buildContent(type, checkType))
@@ -33,32 +37,58 @@ public class NotificationFactory {
         return dto;
     }
     
-//    public static NotificationDTO buildAvailabilityNotification(String serverUrl,
-//                                                                NotificationType type,
-//                                                                CheckType type){
-//        
-//    }
-
-    private static List<NotificationContainerDTO> buildRecipients(Server server, NotificationType type) {
-        List<NotificationContainerDTO> recipients = new ArrayList<>();
-        for (NotificationGroup group : server.getNotificationGroupSet()) {
+    public static NotificationDTO buildAvailabilityNotification(AppInfo server,
+                                                                NotificationType type,
+                                                                CheckType checkType){
+        
+        NotificationDTO dto = new NotificationDTOBuilder()
+                .setNotifContainers(buildRecipientsFromAppInfo(server, type))
+                .setServerId(String.valueOf(server.getId()))
+                .setType(type)
+                .setContent(buildContent(type, checkType))
+                .createNotificationDTO();
+        return dto; 
+        
+    }
+    
+    private static List<NotificationContainerDTO> buildRecipientsFromNGroup(Set<NotificationGroup> groups, NotificationType type){
+        List<NotificationContainerDTO> result = new ArrayList<>(groups.size());
+        for (NotificationGroup group : groups) {
             for (User user : group.getUserSet()) {
-                recipients.add(new NotificationContainerDTO(user.getEmail(), NotificationChannel.EMAIL));
+                result.add(new NotificationContainerDTO(user.getEmail(), NotificationChannel.EMAIL));
                 if(type.equals(NotificationType.CRITICAL)){
-                    recipients.add(new NotificationContainerDTO(user.getPhone(), NotificationChannel.SMS));
+                    result.add(new NotificationContainerDTO(user.getPhone(), NotificationChannel.SMS));
                 }
             }
         }
-
-        for (User user : server.getUserSet()) {
-            recipients.add(new NotificationContainerDTO(user.getEmail(), NotificationChannel.EMAIL));
+        
+        return result;
+    }
+    
+    private static List<NotificationContainerDTO> buildUserRecipients(Set<User> users, NotificationType type){
+        List<NotificationContainerDTO> result = new ArrayList<>(users.size());
+        for (User user : users) {
+            result.add(new NotificationContainerDTO(user.getEmail(), NotificationChannel.EMAIL));
                 if(type.equals(NotificationType.CRITICAL)){
-                    recipients.add(new NotificationContainerDTO(user.getPhone(), NotificationChannel.SMS));
+                    result.add(new NotificationContainerDTO(user.getPhone(), NotificationChannel.SMS));
                 }
         }
+        return result;
+    }
+    
+    private static List<NotificationContainerDTO> buildRecipientsFromServer(Server server, NotificationType type){
+        List<NotificationContainerDTO> recipients = new ArrayList<>();
+        recipients.addAll(buildRecipientsFromNGroup(server.getNotificationGroupSet(), type));
+        recipients.addAll(buildUserRecipients(server.getUserSet(), type));
         return recipients;
     }
     
+        private static List<NotificationContainerDTO> buildRecipientsFromAppInfo(AppInfo server, NotificationType type){
+        List<NotificationContainerDTO> recipients = new ArrayList<>();
+        recipients.addAll(buildRecipientsFromNGroup(server.getNotificationGroupSet(), type));
+        recipients.addAll(buildUserRecipients(server.getUserSet(), type));
+        return recipients;
+    }
     
     private static String buildContent(NotificationType type, CheckType checkType){
         StringBuilder builder = new StringBuilder();

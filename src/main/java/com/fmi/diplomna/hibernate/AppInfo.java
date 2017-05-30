@@ -21,6 +21,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -35,39 +40,53 @@ public class AppInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Basic(optional = false)
-    @Column(name = "name")
+
+    @Size(min = 2, max = 30)
+    @Column(name = "name", nullable = false)
     private String name;
+    
+    @NotNull @Size(min=4, max=5) //http или https
     @Column(name = "protocol", nullable = false)
     private String protocol;
-    @Basic(optional = false)
-    @Column(name = "url")
+    
+    @NotEmpty @Size(max = 255)
+    @Column(name = "url", nullable = false)
     private String url;
-    @Column(name="path", nullable = true)
+    
+    @Size(max = 255)
+    @Column(name = "path", nullable = true)
     private String path;
+    
+    @Size(max = 5) 
     @Column(name = "port", nullable = true)
     private String port;
-    @Basic(optional = false)
-    @Column(name = "hearthbeat_interval")
+    
+    @NotEmpty @Min(1) @Max(1000)
+    @Column(name = "hearthbeat_interval", nullable = false)
     private int hearthbeatInterval;
-    @Basic(optional = false)
-    @Column(name = "unresponsive_interval")
+    
+    @NotEmpty @Min(1) @Max(1000)
+    @Column(name = "unresponsive_interval", nullable = false)
     private int unresponsiveInterval;
     @Column(name = "notification_interval", nullable = false)
     private int notificationInterval;
     @JoinTable(name = "app_info_has_user", joinColumns = {
         @JoinColumn(name = "app_info_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "id")})
-    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch=FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private Set<User> userSet;
     @JoinTable(name = "app_info_has_notification_channel", joinColumns = {
         @JoinColumn(name = "app_info_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "notification_channel_id", referencedColumnName = "id")})
-    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch=FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private Set<NotificationChannel> notificationChannelSet;
+    @JoinTable(name = "app_info_has_notification_group", joinColumns = {
+        @JoinColumn(name = "app_info_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "notification_group_id", referencedColumnName = "id")})
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    private Set<NotificationGroup> notificationGroupSet;
 
     public AppInfo() {
     }
@@ -168,7 +187,15 @@ public class AppInfo implements Serializable {
     public void setNotificationInterval(int notificationInterval) {
         this.notificationInterval = notificationInterval;
     }
-    
+
+    public Set<NotificationGroup> getNotificationGroupSet() {
+        return notificationGroupSet;
+    }
+
+    public void setNotificationGroupSet(Set<NotificationGroup> notificationGroupSet) {
+        this.notificationGroupSet = notificationGroupSet;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -197,5 +224,5 @@ public class AppInfo implements Serializable {
     public String toString() {
         return "com.fmi.diplomna.hibernate.AppInfo[ id=" + id + " ]";
     }
-    
+
 }

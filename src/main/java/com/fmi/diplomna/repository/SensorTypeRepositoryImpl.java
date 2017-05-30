@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public class SensorTypeRepositoryImpl extends GenerictMongoRepository<SensorType> implements SensorTypeRepository {
+public class SensorTypeRepositoryImpl extends GenericMongoRepository<SensorType> implements SensorTypeRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(SensorTypeRepositoryImpl.class);
  

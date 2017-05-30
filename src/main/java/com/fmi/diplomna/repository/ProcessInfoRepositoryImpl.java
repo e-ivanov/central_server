@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public class ProcessInfoRepositoryImpl extends GenerictMongoRepository<Object> implements ProcessInfoRepository {
+public class ProcessInfoRepositoryImpl extends GenericMongoRepository<Object> implements ProcessInfoRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(ProcessInfoRepositoryImpl.class);
 
