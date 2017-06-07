@@ -86,15 +86,12 @@
                                                             </h4>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form:form modelAttribute="newEmailNotification" id="new_notification_form" action="${pageContext.request.contextPath}/notificationChannel/create/email" method="POST" class="form-horizontal" >
+                                                            <form id="new_notification_form" action="${pageContext.request.contextPath}/notificationChannel/create" method="POST" class="form-horizontal" >
                                                                 <div class="row">
                                                                     <div class="form-group col-md-12">
                                                                         <label class="col-md-3 control-lable" for="new_channel_name">Име:</label>
                                                                         <div class="col-md-7">
-                                                                            <form:input type="text" path="channelName" id="new_channel_name" class="form-control input-sm"/>
-                                                                            <div class="has-error">
-                                                                                <form:errors path="channelName" class="help-inline"/>
-                                                                            </div>
+                                                                            <input type="text" name="channelName" id="new_channel_name" class="form-control input-sm"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -102,21 +99,19 @@
                                                                     <div class="form-group col-md-12">
                                                                         <label class="col-md-3 control-lable" for="new_email_address">Имейл адрес:</label>
                                                                         <div class="col-md-7">
-                                                                            <form:input type="text" path="emailAddress" id="new_email_address" class="form-control input-sm"/>
-                                                                            <div class="has-error">
-                                                                                <form:errors path="emailAddress" class="help-inline"/>
-                                                                            </div>
+                                                                            <input type="text" name="emailAddress" id="new_email_address" class="form-control input-sm"/>
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer">
 
-                                                                    <form:button class="btn btn-default" data-dismiss="modal" >Отказ</form:button>
-                                                                    <form:button id="submit_new_email_channel" class="btn btn-primary" data-dismiss="modal" >Запази</form:button>
+                                                                    <button class="btn btn-default" data-dismiss="modal" >Отказ</button>
+                                                                    <button id="submit_new_email_channel" class="btn btn-primary" data-dismiss="modal" >Запази</button>
                                                                     </div>
                                                                     <input type="hidden" name="${_csrf.parameterName}"
                                                                        value="${_csrf.token}" />
-                                                            </form:form>
+                                                            </form>
                                                         </div>
 
                                                     </div>
@@ -156,6 +151,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                                <input type="hidden" value="${emailChannel.type}" name="type" />
                                                                     <button type="submit" class="btn btn-info" value="Send">Запази</button>
                                                                     <button type="submit" class="btn btn-danger" value="Delete">Изтрий</button>
                                                                 </form>

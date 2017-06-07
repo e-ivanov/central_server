@@ -22,7 +22,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
     "networkData",
     "processList",
     "serverId",
-    "timestamp"
+    "timestamp",
+    "uuid"
 })
 
 @Document(collection="sensor_reading")
@@ -39,6 +40,7 @@ public class SensorReading implements Serializable{
     private NetworkData networkData;
     private long serverId;
     private DateTime timestamp;
+    private String uuid;
 
     /**
      * No args constructor for use in serialization
@@ -47,7 +49,7 @@ public class SensorReading implements Serializable{
     public SensorReading() {
     }
 
-    public SensorReading(String id, MemoryData memoryData, CpuData cpuData, DiskData diskData, String systemUptime, NetworkData networkData, long serverId, DateTime timestamp) {
+    public SensorReading(String id, MemoryData memoryData, CpuData cpuData, DiskData diskData, String systemUptime, NetworkData networkData, long serverId, DateTime timestamp, String uuid) {
         this.id = id;
         this.memoryData = memoryData;
         this.cpuData = cpuData;
@@ -56,6 +58,7 @@ public class SensorReading implements Serializable{
         this.networkData = networkData;
         this.serverId = serverId;
         this.timestamp = timestamp;
+        this.uuid = uuid;
     }
 
 
@@ -130,6 +133,16 @@ public class SensorReading implements Serializable{
     public void setTimestamp(DateTime timestamp) {
         this.timestamp = timestamp;
     }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+    
+    
     
 
     @Override
@@ -139,7 +152,9 @@ public class SensorReading implements Serializable{
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(memoryData).append(cpuData).append(diskData).append(systemUptime).append(networkData).append(serverId).toHashCode();
+        return new HashCodeBuilder().append(memoryData).append(cpuData)
+                .append(diskData).append(systemUptime).append(networkData)
+                 .append(serverId).append(uuid).toHashCode();
     }
 
     @Override
@@ -151,7 +166,13 @@ public class SensorReading implements Serializable{
             return false;
         }
         SensorReading rhs = ((SensorReading) other);
-        return new EqualsBuilder().append(memoryData, rhs.memoryData).append(cpuData, rhs.cpuData).append(diskData, rhs.diskData).append(systemUptime, rhs.systemUptime).append(networkData, rhs.networkData).append(serverId, rhs.serverId).isEquals();
+        return new EqualsBuilder().append(memoryData, rhs.memoryData)
+                .append(cpuData, rhs.cpuData).append(diskData, rhs.diskData)
+                .append(systemUptime, rhs.systemUptime)
+                .append(networkData, rhs.networkData)
+                .append(serverId, rhs.serverId)
+                .append(uuid, rhs.uuid)
+                .isEquals();
     }
 
 }

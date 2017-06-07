@@ -36,11 +36,11 @@ public class GenericMongoRepository<T> implements GenericCRUDInterface<T>{
     }
     
     public List<T> loadAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return mongoTemplate.findAll(clazz);
     }
 
     public void saveAll(List<T> items) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        mongoTemplate.insertAll(items);
     }
     
     public MongoTemplate getTemplate(){

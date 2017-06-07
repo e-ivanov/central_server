@@ -10,12 +10,13 @@ import java.util.List;
 
 public class NotificationDTOBuilder {
 
-    private List<NotificationChannel> notificationChannels;
+    private List<NotificationChannelType> notificationChannels;
     private String content;
     private List<String> recepients;
     private String serverId;
     private NotificationType type;
     private List<NotificationContainerDTO> notifContainers;
+    private String uuid;
 
     public NotificationDTOBuilder() {
     }
@@ -44,9 +45,14 @@ public class NotificationDTOBuilder {
         this.notifContainers = notifContainers;
         return this;
     }
+    
+    public NotificationDTOBuilder setUUID(String uuid){
+        this.uuid = uuid;
+        return this;
+    }
 
     public NotificationDTO createNotificationDTO() {
-        return new NotificationDTO(content, recepients, serverId, type, notifContainers);
+        return new NotificationDTO(content, recepients, serverId, type, notifContainers, uuid);
     }
     
 }

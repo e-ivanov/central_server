@@ -17,17 +17,19 @@ public class NotificationDTO {
     private String serverId;
     private List<NotificationContainerDTO> notificationContainers;
     private NotificationType type;
+    private String uuid;
 
     public NotificationDTO() {
     }
 
     public NotificationDTO( String content,
                            List<String> recepients, String serverId, NotificationType type,
-                           List<NotificationContainerDTO> notifContainers) {
+                           List<NotificationContainerDTO> notifContainers, String uuid) {
         this.content = content;
         this.serverId = serverId;
         this.type = type;
         this.notificationContainers = notifContainers;
+        this.uuid = uuid;
     }
 
     public String getContent() {
@@ -62,9 +64,17 @@ public class NotificationDTO {
         this.type = type;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String toString() {
-        return "NotificationDTO{" + "content=" + content + ", serverId=" + serverId + ", notificationContainers=" + notificationContainers + ", type=" + type + '}';
+        return "NotificationDTO{" + "content=" + content + ", serverId=" + serverId + ", notificationContainers=" + notificationContainers + ", type=" + type + ", uuid=" + uuid + '}';
     }
     
 }

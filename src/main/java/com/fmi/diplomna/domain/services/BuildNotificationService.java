@@ -6,7 +6,7 @@
 package com.fmi.diplomna.domain.services;
 
 import com.fmi.diplomna.domain.mongo.SensorReading;
-import com.fmi.diplomna.dto.NotificationChannel;
+import com.fmi.diplomna.dto.NotificationChannelType;
 import com.fmi.diplomna.dto.NotificationDTO;
 import com.fmi.diplomna.dto.NotificationType;
 import com.fmi.diplomna.hibernate.ResourceNotificationPolicy;

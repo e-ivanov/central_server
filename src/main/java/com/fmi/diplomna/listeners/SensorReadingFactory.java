@@ -25,6 +25,7 @@ public class SensorReadingFactory {
             reading.setServerId(message.getServerId());
             reading.setSystemUptime(message.getSystemUptime());
             reading.setTimestamp(DateTime.now());
+            reading.setUuid(message.getUuid());
             
             return reading;
     }

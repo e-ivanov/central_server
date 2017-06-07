@@ -5,6 +5,7 @@
  */
 package com.fmi.diplomna.services;
 
+import com.fmi.diplomna.hibernate.EmailNotification;
 import com.fmi.diplomna.hibernate.NotificationChannel;
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface NotificationChannelService {
     void save(NotificationChannel entity);
 
     void saveAll(List<NotificationChannel> items);
+    
+    public List<EmailNotification> getEmailNotifications();
 }

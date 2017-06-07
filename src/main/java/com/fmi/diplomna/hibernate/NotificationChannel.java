@@ -5,12 +5,15 @@
  */
 package com.fmi.diplomna.hibernate;
 
+import com.fmi.diplomna.dto.NotificationChannelType;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,9 +21,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -41,9 +41,15 @@ public class NotificationChannel implements Serializable {
     @Basic(optional = false)
     @Column(name = "channel_name")
     protected String channelName;
+
+    @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    protected NotificationChannelType type;
     @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "notificationChannelSet", fetch = FetchType.EAGER)
+    @java.lang.SuppressWarnings("squid:S1948")
     protected Set<AppInfo> appInfoSet;
     @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "notificationChannelSet", fetch = FetchType.EAGER)
+    @java.lang.SuppressWarnings("squid:S1948")
     protected Set<ResourceNotificationPolicy> resourceNotificationPolicySet;
 
     public NotificationChannel() {
@@ -61,11 +67,10 @@ public class NotificationChannel implements Serializable {
     public Long getId() {
         return id;
     }
-    
-     public void setId(Long id) {
+
+    public void setId(Long id) {
         this.id = id;
     }
-
 
     public String getChannelName() {
         return channelName;
@@ -89,6 +94,14 @@ public class NotificationChannel implements Serializable {
 
     public void setResourceNotificationPolicySet(Set<ResourceNotificationPolicy> resourceNotificationPolicySet) {
         this.resourceNotificationPolicySet = resourceNotificationPolicySet;
+    }
+
+    public NotificationChannelType getType() {
+        return type;
+    }
+
+    public void setType(NotificationChannelType type) {
+        this.type = type;
     }
 
     @Override
@@ -115,5 +128,5 @@ public class NotificationChannel implements Serializable {
     public String toString() {
         return "com.fmi.diplomna.hibernate.NotificationChannel[ id=" + id + " ]";
     }
-    
+
 }

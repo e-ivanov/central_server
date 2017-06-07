@@ -6,13 +6,11 @@
 package com.fmi.diplomna.repository;
 
 import com.fmi.diplomna.domain.mongo.ProcessData;
-import com.fmi.diplomna.dto.ProcessListMessage;
-import java.util.List;
 
 /**
  *
  * @author killer
  */
-public interface ProcessInfoRepository extends GenericCRUDInterface<Object>{
+public interface ProcessInfoRepository extends GenericCRUDInterface<ProcessData>{
     
 }

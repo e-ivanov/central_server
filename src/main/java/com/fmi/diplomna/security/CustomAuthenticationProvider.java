@@ -8,7 +8,6 @@ package com.fmi.diplomna.security;
 import com.fmi.diplomna.hibernate.User;
 import com.fmi.diplomna.services.UserService;
 import java.util.Collection;
-import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,8 +33,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
     
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken token
-                = (UsernamePasswordAuthenticationToken)auth;
+
         String username = auth.getName();
         User user = userService.loadByUserName(username);
         

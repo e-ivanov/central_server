@@ -5,7 +5,7 @@
  */
 package com.fmi.diplomna.domain.services;
 
-import com.fmi.diplomna.dto.NotificationChannel;
+import com.fmi.diplomna.dto.NotificationChannelType;
 import com.fmi.diplomna.dto.NotificationContainerDTO;
 import com.fmi.diplomna.dto.NotificationDTO;
 import com.fmi.diplomna.dto.NotificationDTOBuilder;
@@ -18,6 +18,7 @@ import com.fmi.diplomna.listeners.StatisticsUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,6 +34,7 @@ public class NotificationFactory {
                 .setServerId(String.valueOf(server.getId()))
                 .setType(type)
                 .setContent(buildContent(type, checkType))
+                .setUUID(UUID.randomUUID().toString())
                 .createNotificationDTO();
         return dto;
     }
@@ -46,6 +48,7 @@ public class NotificationFactory {
                 .setServerId(String.valueOf(server.getId()))
                 .setType(type)
                 .setContent(buildContent(type, checkType))
+                .setUUID(UUID.randomUUID().toString())
                 .createNotificationDTO();
         return dto; 
         
@@ -55,9 +58,9 @@ public class NotificationFactory {
         List<NotificationContainerDTO> result = new ArrayList<>(groups.size());
         for (NotificationGroup group : groups) {
             for (User user : group.getUserSet()) {
-                result.add(new NotificationContainerDTO(user.getEmail(), NotificationChannel.EMAIL));
+                result.add(new NotificationContainerDTO(user.getEmail(), NotificationChannelType.EMAIL));
                 if(type.equals(NotificationType.CRITICAL)){
-                    result.add(new NotificationContainerDTO(user.getPhone(), NotificationChannel.SMS));
+                    result.add(new NotificationContainerDTO(user.getPhone(), NotificationChannelType.SMS));
                 }
             }
         }
@@ -68,9 +71,9 @@ public class NotificationFactory {
     private static List<NotificationContainerDTO> buildUserRecipients(Set<User> users, NotificationType type){
         List<NotificationContainerDTO> result = new ArrayList<>(users.size());
         for (User user : users) {
-            result.add(new NotificationContainerDTO(user.getEmail(), NotificationChannel.EMAIL));
+            result.add(new NotificationContainerDTO(user.getEmail(), NotificationChannelType.EMAIL));
                 if(type.equals(NotificationType.CRITICAL)){
-                    result.add(new NotificationContainerDTO(user.getPhone(), NotificationChannel.SMS));
+                    result.add(new NotificationContainerDTO(user.getPhone(), NotificationChannelType.SMS));
                 }
         }
         return result;

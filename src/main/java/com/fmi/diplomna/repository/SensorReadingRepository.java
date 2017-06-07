@@ -16,4 +16,5 @@ import org.joda.time.DateTime;
 public interface SensorReadingRepository extends GenericCRUDInterface<SensorReading>{
      public List<SensorReading> findAllReadings();
      public List<SensorReading> filterByServerAndDate(long serverId, DateTime date);
+     public SensorReading findByUUID(String uuid);
 }

@@ -15,7 +15,6 @@ import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -25,7 +24,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
     "system_uptime",
     "networkData",
     "processList",
-    "serverId"
+    "serverId",
+    "uuid"
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerReadingMessage implements Serializable{
@@ -44,9 +44,12 @@ public class ServerReadingMessage implements Serializable{
     @JsonProperty("networkData")
     private NetworkData networkData;
     @JsonProperty("processList")
+    @java.lang.SuppressWarnings("squid:S1948")
     private List<ProcessData> processList = null;
     @JsonProperty("serverId")
     private int serverId;
+    @JsonProperty("uuid")
+    private String uuid;
 
     /**
      * No args constructor for use in serialization
@@ -65,7 +68,7 @@ public class ServerReadingMessage implements Serializable{
      * @param memoryData
      * @param systemUptime
      */
-    public ServerReadingMessage(MemoryData memoryData, CpuData cpuData, DiskData diskData, String systemUptime, NetworkData networkData, List<ProcessData> processList, int serverId) {
+    public ServerReadingMessage(MemoryData memoryData, CpuData cpuData, DiskData diskData, String systemUptime, NetworkData networkData, List<ProcessData> processList, int serverId, String uuid) {
         super();
         this.memoryData = memoryData;
         this.cpuData = cpuData;
@@ -74,6 +77,7 @@ public class ServerReadingMessage implements Serializable{
         this.networkData = networkData;
         this.processList = processList;
         this.serverId = serverId;
+        this.uuid = uuid;
     }
 
     @JsonProperty("memoryData")
@@ -146,6 +150,18 @@ public class ServerReadingMessage implements Serializable{
         this.serverId = serverId;
     }
 
+    @JsonProperty("uuid")
+    public String getUuid() {
+        return uuid;
+    }
+
+    @JsonProperty("uuid")
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+    
+    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -153,7 +169,9 @@ public class ServerReadingMessage implements Serializable{
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(memoryData).append(cpuData).append(diskData).append(systemUptime).append(networkData).append(processList).append(serverId).toHashCode();
+        return new HashCodeBuilder().append(memoryData).append(cpuData)
+                .append(diskData).append(systemUptime).append(networkData)
+                .append(processList).append(serverId).append(uuid).toHashCode();
     }
 
     @Override
@@ -165,7 +183,14 @@ public class ServerReadingMessage implements Serializable{
             return false;
         }
         ServerReadingMessage rhs = ((ServerReadingMessage) other);
-        return new EqualsBuilder().append(memoryData, rhs.memoryData).append(cpuData, rhs.cpuData).append(diskData, rhs.diskData).append(systemUptime, rhs.systemUptime).append(networkData, rhs.networkData).append(processList, rhs.processList).append(serverId, rhs.serverId).isEquals();
+        return new EqualsBuilder().append(memoryData, rhs.memoryData)
+                .append(cpuData, rhs.cpuData).append(diskData, rhs.diskData)
+                .append(systemUptime, rhs.systemUptime)
+                .append(networkData, rhs.networkData)
+                .append(processList, rhs.processList)
+                .append(serverId, rhs.serverId)
+                .append(uuid, rhs.uuid)
+                .isEquals();
     }
 
 }

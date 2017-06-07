@@ -4,6 +4,7 @@ package com.fmi.diplomna.domain.mongo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -11,8 +12,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "server_stats")
-public class ProcessData {
+public class ProcessData implements Serializable{
 
+    private static final long serialVersionUID = 1L;
+    
     @Id
     private String id;
     @JsonProperty("status")
@@ -27,6 +30,7 @@ public class ProcessData {
     private double createTime;
     @JsonProperty("name")
     private String name;
+    @JsonProperty("server_id")
     private String serverId;
 
     /**

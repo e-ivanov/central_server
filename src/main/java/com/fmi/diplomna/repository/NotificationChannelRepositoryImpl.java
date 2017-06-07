@@ -5,7 +5,10 @@
  */
 package com.fmi.diplomna.repository;
 
+import com.fmi.diplomna.dto.NotificationChannelType;
+import com.fmi.diplomna.hibernate.EmailNotification;
 import com.fmi.diplomna.hibernate.NotificationChannel;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -14,5 +17,11 @@ import org.springframework.stereotype.Repository;
 public class NotificationChannelRepositoryImpl extends GenericCRUDRepository<NotificationChannel>implements NotificationChannelRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationChannelRepositoryImpl.class);
+
+    @Override
+    public List<EmailNotification> getEmailNotifications() {
+        return super.getCurrentSession()
+                .createQuery("from NotificationChannel where type='EMAIL'").list();
+    }
 
 }

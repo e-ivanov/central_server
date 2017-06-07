@@ -35,6 +35,13 @@ public class SensorReadingRepositoryImpl extends GenericMongoRepository<SensorRe
         query.addCriteria(Criteria.where("timestamp").gte(date));
         return getTemplate().find(query, SensorReading.class, "sensor_reading");
     }
+
+    @Override
+    public SensorReading findByUUID(String uuid) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("uuid").is(uuid));
+        return getTemplate().findOne(query, SensorReading.class, "sensor_reading");
+    }
     
  
     

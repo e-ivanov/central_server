@@ -9,7 +9,7 @@ package com.fmi.diplomna.dto;
  *
  * @author killer
  */
-public enum NotificationChannel {
+public enum NotificationChannelType {
     EMAIL,
     SMS;
 }

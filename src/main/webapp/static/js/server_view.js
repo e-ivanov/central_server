@@ -22,14 +22,12 @@ function ServerView(containerId) {
         },
         this.showCpu = function () {
 
-            console.log("on change cpu called")
             this.cpuView.y = this.model.cpuData.usage;
             this.cpuView.render();
         },
         this.showMemory = function () {
             this.memoryView.y = this.model.memoryData.usage_percent;
             this.memoryView.render();
-            console.log("on change memory called")
         },
         this.showDiskData = function () {
             var view = new graphView();
@@ -38,12 +36,9 @@ function ServerView(containerId) {
             var view = new graphView();
         },
         this.showSystemUptime = function () {
-            console.log(this.systemUpTimeSelector + ' p')
             $("#" + this.systemUpTimeSelector + ' p').text(this.model.system_uptime)
         },
         this.showProcesses = function () {
-            //var view = new graphView();
-            console.log("processes changed")
         },
         this.selector = {},
         this.update = function () {

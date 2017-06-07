@@ -5,7 +5,9 @@
  */
 package com.fmi.diplomna.repository;
 
+import com.fmi.diplomna.hibernate.EmailNotification;
 import com.fmi.diplomna.hibernate.NotificationChannel;
+import java.util.List;
 
 
 /**
@@ -14,4 +16,5 @@ import com.fmi.diplomna.hibernate.NotificationChannel;
  */
 public interface NotificationChannelRepository extends GenericCRUDInterface<NotificationChannel>{
     
+    public List<EmailNotification> getEmailNotifications();
 }

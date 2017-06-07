@@ -1,4 +1,4 @@
-var newMailChannelFormTpl = '<div class="panel"> <a data-toggle="collapse" data-parent="#emailAccordion" href="#collapseEmail{{id}}">{{emailAddress}} </a> <div id="#collapseEmail{{id}}" class="panel-collapse collapse"> <div class="panel-body"><form action="{{url}}" method="POST" class="form-horizontal" > <input type="hidden" name="id" value="{{id}}" /> <div class="row"> <div class="form-group col-md-12"> <label class="col-md-3 control-lable" for="name">Name:</label> <div class="col-md-7"> <input type="text" name="channelName" value="{{channelName}}" id="name" class="form-control input-sm"/> <div class="has-error"> </div> </div> </div> </div> <div class="row"> <div class="form-group col-md-12"> <label class="col-md-3 control-lable" for="email_address">Email address:</label> <div class="col-md-7"> <input type="text" name="emailAddress" value="{{emailAddress}}" id="email_address" class="form-control input-sm"/> <div class="has-error"> </div> </div> </div> </div> <button type="submit" class="btn btn-info" value="Send">Запази</button><button type="submit" class="btn btn-danger" value="Delete">Изтрий</button> </form></div></div></div>';
+var newMailChannelFormTpl = '<div class="panel"> <a data-toggle="collapse" data-parent="#emailAccordion" href="#collapseEmail{{id}}">{{emailAddress}} </a> <div id="#collapseEmail{{id}}" class="panel-collapse collapse"> <div class="panel-body"><form action="{{url}}" method="POST" class="form-horizontal" > <input type="hidden" name="id" value="{{id}}" /> <div class="row"> <div class="form-group col-md-12"> <label class="col-md-3 control-lable" for="name">Name:</label> <div class="col-md-7"> <input type="text" name="channelName" value="{{channelName}}" id="name" class="form-control input-sm"/> <div class="has-error"> </div> </div> </div> </div> <div class="row"> <div class="form-group col-md-12"> <label class="col-md-3 control-lable" for="email_address">Email address:</label> <div class="col-md-7"> <input type="text" name="emailAddress" value="{{emailAddress}}" id="email_address" class="form-control input-sm"/> <input type="hidden" value="EMAIL" name="type" /><div class="has-error"> </div> </div> </div> </div> <button type="submit" class="btn btn-info" value="Send">Запази</button><button type="submit" class="btn btn-danger" value="Delete">Изтрий</button> </form></div></div></div>';
         var token;
         var header;
         $(document).ready(function () {
@@ -9,9 +9,10 @@ token = $("meta[name='_csrf']").attr("content");
 evt.preventDefault();
         var formData = {
         "channelName": $("#new_channel_name").val(),
-                "emailAddress": $("#new_email_address").val()
+                "emailAddress": $("#new_email_address").val(),
+                "type": "EMAIL"
         };
-        var formUrl = ctx + "/notificationChannel/create/email"
+        var formUrl = ctx + "/notificationChannel/create"
         submitNewElementForm(formData, formUrl, newMailChannelFormTpl, $("#new_main_model_form_container"), $("#mail_list_container"))
         return false;
         });
@@ -23,9 +24,10 @@ evt.preventDefault();
         var formDeleteUrl = ctx + "/notificationChannel/delete";
         var targetForm = $(this).parents('form.form-horizontal:first');
         var formData = {
-        "id" : $("input:hidden[name='id']", $(targetForm)).val(),
+                "id" : $("input:hidden[name='id']", $(targetForm)).val(),
                 "channelName": $("input:text[name='channelName']", $(targetForm)).val(),
-                "emailAddress": $("input:text[name='emailAddress']", $(targetForm)).val()
+                "emailAddress": $("input:text[name='emailAddress']", $(targetForm)).val(),
+                "type": $("input:hidden[name='type']").val()
         };
         if (action == "Send"){
 updateExistingElement(formUpdateUrl, formData, null);

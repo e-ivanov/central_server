@@ -5,6 +5,7 @@
  */
 package com.fmi.diplomna.services;
 
+import com.fmi.diplomna.hibernate.EmailNotification;
 import com.fmi.diplomna.hibernate.NotificationChannel;
 import com.fmi.diplomna.repository.NotificationChannelRepository;
 import java.util.List;
@@ -47,6 +48,11 @@ public class NotificationChannelServiceImpl implements NotificationChannelServic
     @Override
     public void saveAll(List<NotificationChannel> items) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<EmailNotification> getEmailNotifications() {
+        return repository.getEmailNotifications();
     }
     
 }

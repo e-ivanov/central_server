@@ -5,17 +5,11 @@
  */
 package com.fmi.diplomna.repository;
 
-import com.fmi.diplomna.cache.AppInfoCache;
 import com.fmi.diplomna.hibernate.AppInfo;
-import com.fmi.diplomna.hibernate.User;
 import com.fmi.diplomna.scheduler.PingJob;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
-import org.hibernate.Query;
-import org.hibernate.SessionFactory;
 import org.quartz.JobBuilder;
 import static org.quartz.JobBuilder.newJob;
 import org.quartz.JobDetail;
@@ -28,11 +22,9 @@ import org.quartz.TriggerKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -60,7 +52,7 @@ public class AppInfoRepositoryImpl extends GenericCRUDRepository<AppInfo>impleme
                         addNewJob(info);
                         logger.info("Initialized job with id: "+info.getId());
                     } catch (SchedulerException ex) {
-                        java.util.logging.Logger.getLogger(AppInfoRepositoryImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.error("Възникна грешка! ", ex);
                     }
                 }
             }
@@ -77,13 +69,13 @@ public class AppInfoRepositoryImpl extends GenericCRUDRepository<AppInfo>impleme
             try {
                 updateJob(entity);
             } catch (SchedulerException ex) {
-                logger.error(ex.getMessage());
+                logger.error("Възникна грешка! ", ex);
             }
         } else {
             try {
                 addNewJob(entity);
             } catch (SchedulerException ex) {
-                logger.error(ex.getMessage());
+                logger.error("Възникна грешка! ", ex);
             }
         }
 

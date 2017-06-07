@@ -41,11 +41,11 @@ public class GenericCRUDRepository<T> implements GenericCRUDInterface<T>{
         }
     }
     public List<T> loadAll(){
-        String cls = clazz.getName();
         List<T> list = getCurrentSession().createQuery("from "+clazz.getName()).list();
         return list;
     }
     public void saveAll(List<T> items){
+        //Not implemented yet
     }
     
     public Session getCurrentSession(){

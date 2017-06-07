@@ -12,12 +12,12 @@ package com.fmi.diplomna.dto;
 public class NotificationContainerDTO {
     
     private String target;
-    private NotificationChannel notificationChannel;
+    private NotificationChannelType notificationChannel;
     
     public NotificationContainerDTO() {
     }
 
-    public NotificationContainerDTO(String target, NotificationChannel notificationChannel) {
+    public NotificationContainerDTO(String target, NotificationChannelType notificationChannel) {
         this.target = target;
         this.notificationChannel = notificationChannel;
     }
@@ -27,7 +27,7 @@ public class NotificationContainerDTO {
         return target;
     }
 
-    public NotificationChannel getNotificationChannel() {
+    public NotificationChannelType getNotificationChannel() {
         return notificationChannel;
     }
     

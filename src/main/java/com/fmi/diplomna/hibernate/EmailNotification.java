@@ -16,6 +16,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  *
@@ -24,6 +26,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "email_notification")
 @PrimaryKeyJoinColumn(name="id")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class EmailNotification extends NotificationChannel implements Serializable{
 
     private static final long serialVersionUID = 1L;
