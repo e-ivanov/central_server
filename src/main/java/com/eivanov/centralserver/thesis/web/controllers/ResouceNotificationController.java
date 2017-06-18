@@ -15,9 +15,11 @@ import com.eivanov.centralserver.thesis.services.NotificationChannelService;
 import com.eivanov.centralserver.thesis.services.ResourceNotificationPolicyService;
 import com.eivanov.centralserver.thesis.services.ServerService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,9 +66,13 @@ public class ResouceNotificationController {
     
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String updateResourceNotificationPolicy(
-            @ModelAttribute("rsnotification") ResourceNotificationPolicy policy){
+            @Valid @ModelAttribute("rsnotification") ResourceNotificationPolicy policy,
+            BindingResult result){
+        if(result.hasErrors()){
+            return "rsnotification/rsnotification_form";
+        }
         notificationPolicyService.save(policy);
-        return "redirect:list";
+        return "redirect:/resourcePolicy/list";
     }
     
     @RequestMapping("/edit/{id}")
@@ -78,6 +84,6 @@ public class ResouceNotificationController {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String deleteResourceNotificationPolicy(@PathVariable("id") long id){
         notificationPolicyService.delete(notificationPolicyService.load(id));
-        return "redirect:list";
+        return "redirect:/resourcePolicy/list";
     }
 }

@@ -24,30 +24,30 @@
     			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</Pattern>
     		</encoder> 	    
       	</appender>
-      	<appender name="minuteRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!--      	<appender name="minuteRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
     		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-    		    <!-- rollover every minute -->
+    		     rollover every minute 
     			<FileNamePattern>/home/killer/test_log/minute_log.%d{yyyy-MM-dd_HH-mm}.log</FileNamePattern>
 
-    			<!-- keep 30 minutes' worth of history -->
+    			 keep 30 minutes' worth of history 
     			<maxHistory>30</maxHistory>			
     		</rollingPolicy>
 
     		<encoder>
     			<Pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</Pattern>
     		</encoder> 	    
-      	</appender>  	
+      	</appender>  	-->
 
     	<logger name="org.codingpedia" additivity="false">
     	    <level value="DEBUG" />
     		<appender-ref ref="dailyRollingFileAppender"/>
-    		<appender-ref ref="minuteRollingFileAppender"/>
+    		<!--<appender-ref ref="minuteRollingFileAppender"/>-->
     		<appender-ref ref="consoleAppender" />
     	</logger>
 
     	<root>
     		<level value="DEBUG" />
-    		<!--<appender-ref ref="dailyRollingFileAppender"/>-->
+    		<appender-ref ref="dailyRollingFileAppender"/>
     		<!--<appender-ref ref="minuteRollingFileAppender"/>-->
     		<appender-ref ref="consoleAppender" />
     	</root>

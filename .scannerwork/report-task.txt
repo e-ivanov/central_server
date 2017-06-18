@@ -1,5 +1,5 @@
-projectKey=diplomna
+projectKey=ThesisCentralServer
 serverUrl=http://localhost:9000
-dashboardUrl=http://localhost:9000/dashboard/index/diplomna
-ceTaskId=AVx_C1BbDZ4PqqPUPY2K
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AVx_C1BbDZ4PqqPUPY2K
+dashboardUrl=http://localhost:9000/dashboard/index/ThesisCentralServer
+ceTaskId=AVyCb7LIDhCq9Jtlhl6_
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AVyCb7LIDhCq9Jtlhl6_

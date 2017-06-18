@@ -201,4 +201,10 @@ CREATE TABLE `user_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+
+INSERT INTO `user_roles`(`user_role_id`, `role`) VALUES (1, 'ROLE_ADMIN');
+INSERT INTO `user`(`id`, `firstName`, `lastName`, `email`, `phone`, `password`) VALUES (1, 'sample', 'admin', 'sample@localhost.com', 123456, '$2a$10$HccGXskYxmZB.qkRyFmOZ.li4vgzQB5buHZkM3jXjKkLu21ZzoYjy');
+INSERT INTO `app_user_role` (`USER_ID`, `USER_ROLE_ID`) VALUES (1,1);
+
+
 -- 2017-05-25 18:44:16

@@ -32,6 +32,8 @@ public class ProcessData implements Serializable{
     private String name;
     @JsonProperty("server_id")
     private String serverId;
+    @JsonProperty("timestamp")
+    private String timestamp;
 
     /**
      * No args constructor for use in serialization
@@ -50,7 +52,9 @@ public class ProcessData implements Serializable{
      * @param pid
      * @param serverId
      */
-    public ProcessData(String status, double cpuUsage, double memoryUsage, int pid, double createTime, String name, String serverId) {
+    public ProcessData(String status, double cpuUsage, double memoryUsage,
+                       int pid, double createTime, String name, String serverId,
+                       String timestamp) {
         super();
         this.status = status;
         this.cpuUsage = cpuUsage;
@@ -59,6 +63,7 @@ public class ProcessData implements Serializable{
         this.createTime = createTime;
         this.name = name;
         this.serverId = serverId;
+        this.timestamp = timestamp;
     }
 
     public String getStatus() {
@@ -116,6 +121,16 @@ public class ProcessData implements Serializable{
     public void setServerId(String serverId) {
         this.serverId = serverId;
     }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+    
+    
     
 
     @Override
@@ -137,7 +152,13 @@ public class ProcessData implements Serializable{
             return false;
         }
         ProcessData rhs = ((ProcessData) other);
-        return new EqualsBuilder().append(status, rhs.status).append(cpuUsage, rhs.cpuUsage).append(memoryUsage, rhs.memoryUsage).append(pid, rhs.pid).append(createTime, rhs.createTime).append(name, rhs.name).append(serverId, rhs.serverId).isEquals();
+        return new EqualsBuilder().append(status, rhs.status)
+                .append(cpuUsage, rhs.cpuUsage)
+                .append(memoryUsage, rhs.memoryUsage)
+                .append(pid, rhs.pid).append(createTime, rhs.createTime)
+                .append(name, rhs.name).append(serverId, rhs.serverId)
+                .append(timestamp, rhs.timestamp)
+                .isEquals();
     }
 
 }

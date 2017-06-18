@@ -58,7 +58,7 @@ public class StatisticsInfoListener implements MessageListener {
             message = jsonMessageConvertor.readValue(new String(msg.getBody()), ServerReadingMessage.class);
             reading = SensorReadingFactory.assembleSensorReading(message);
             SensorReading isDuplicate = sensorReadingRepository.findByUUID(message.getUuid());
-            if(isDuplicate != null){
+            if (isDuplicate != null) {
                 logger.error("Това съобщение вече  е обработено!");
                 return;
             }
@@ -76,9 +76,7 @@ public class StatisticsInfoListener implements MessageListener {
         sensorReadingRepository.save(reading);
         serverStatus.updateItem(reading.getServerId(), reading);
 
-        if (message != null && message.getProcessList() != null) {
-            processRepository.saveAll(message.getProcessList());
-        }
+        processRepository.saveAll(message.getProcessList());
         checkResourceUsage(reading, notificationInfo);
 
     }

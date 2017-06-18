@@ -16,9 +16,11 @@ import com.eivanov.centralserver.thesis.services.NotificationGroupService;
 import com.eivanov.centralserver.thesis.services.NotificationService;
 import com.eivanov.centralserver.thesis.services.UserService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,14 +80,17 @@ public class AppInfoController {
     }
     
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String updateAppInfo(@ModelAttribute("appinfo") AppInfo appInfo){
+    public String updateAppInfo(@Valid @ModelAttribute("appinfo") AppInfo appInfo, BindingResult result){
+        if(result.hasErrors()){
+            return "appinfo/appinfo_form";
+        }
         appInfoService.save(appInfo);
-        return "redirect:list";
+        return "redirect:/appinfo/list";
     }
     
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String deleteAppInfo(@PathVariable("id") long id){
         appInfoService.delete(appInfoService.load(id));
-        return "redirect:list";
+        return "redirect:/appinfo/list";
     }
 }

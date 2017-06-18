@@ -15,6 +15,7 @@ import com.eivanov.centralserver.thesis.services.ResourceNotificationPolicyServi
 import com.eivanov.centralserver.thesis.services.ServerService;
 import com.eivanov.centralserver.thesis.services.UserService;
 import java.util.List;
+import javax.validation.Valid;
 import org.hibernate.sql.Template;
 import org.joda.time.DateTime;
 import org.springframework.amqp.core.Message;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,12 +107,16 @@ public class ServerController {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String deleteServer(@PathVariable("id") long id){
         serverService.delete(serverService.load(id));
-        return "redirect:list";
+        return "redirect:/server/list";
     }
     
     @RequestMapping(value="/update", method = RequestMethod.POST)
-    public String updateServer(@ModelAttribute("server") Server server){
+    public String updateServer(@Valid @ModelAttribute("server") Server server,
+                               BindingResult result){
+        if(result.hasErrors()){
+            return "server/server_form";
+        }
         serverService.save(server);
-        return "redirect:list";
+        return "redirect:/server/list";
     }
 }

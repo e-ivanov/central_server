@@ -12,9 +12,11 @@ import com.eivanov.centralserver.thesis.services.NotificationGroupService;
 import com.eivanov.centralserver.thesis.services.ServerService;
 import com.eivanov.centralserver.thesis.services.UserService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,14 +68,18 @@ public class NotificationGroupController {
     }
     
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String updateNotificationGroup(@ModelAttribute("group") NotificationGroup group){
+    public String updateNotificationGroup(@Valid @ModelAttribute("group") NotificationGroup group,
+                                          BindingResult result){
+        if(result.hasErrors()){
+            return "notification_group/ngroup_form";
+        }
         groupService.save(group);
-        return "redirect:list";
+        return "redirect:/notificationgroup/list";
     }
     
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String deleteNotificationGroup(@PathVariable("id") long id){
         groupService.delete(groupService.load(id));
-        return "redirect:list";
+        return "redirect:/notificationgroup/list";
     }
 }

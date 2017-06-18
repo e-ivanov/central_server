@@ -82,6 +82,8 @@ public class ServiceConfig {
         ds.addDataSourceProperty("prepStmtCacheSize", 250);
         ds.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
         ds.addDataSourceProperty("useServerPrepStmts", true);
+        ds.addDataSourceProperty("characterEncoding","utf8");
+        ds.addDataSourceProperty("useUnicode","true");
         return ds;
     }
 

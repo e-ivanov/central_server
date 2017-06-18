@@ -15,6 +15,7 @@ import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.joda.time.DateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -68,7 +69,11 @@ public class ServerReadingMessage implements Serializable{
      * @param memoryData
      * @param systemUptime
      */
-    public ServerReadingMessage(MemoryData memoryData, CpuData cpuData, DiskData diskData, String systemUptime, NetworkData networkData, List<ProcessData> processList, int serverId, String uuid) {
+    public ServerReadingMessage(MemoryData memoryData, CpuData cpuData,
+                                DiskData diskData, String systemUptime,
+                                NetworkData networkData,
+                                List<ProcessData> processList,
+                                int serverId, String uuid) {
         super();
         this.memoryData = memoryData;
         this.cpuData = cpuData;
@@ -171,7 +176,8 @@ public class ServerReadingMessage implements Serializable{
     public int hashCode() {
         return new HashCodeBuilder().append(memoryData).append(cpuData)
                 .append(diskData).append(systemUptime).append(networkData)
-                .append(processList).append(serverId).append(uuid).toHashCode();
+                .append(processList).append(serverId).append(uuid)
+                .toHashCode();
     }
 
     @Override

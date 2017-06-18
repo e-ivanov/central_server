@@ -63,11 +63,11 @@ public class AppInfo implements Serializable {
     @Column(name = "port", nullable = true)
     private String port;
     
-    @NotEmpty @Min(1) @Max(1000)
+    @NotNull @Min(1) @Max(1000)
     @Column(name = "hearthbeat_interval", nullable = false)
     private int hearthbeatInterval;
     
-    @NotEmpty @Min(1) @Max(1000)
+    @NotNull @Min(1) @Max(1000)
     @Column(name = "unresponsive_interval", nullable = false)
     private int unresponsiveInterval;
     @Column(name = "notification_interval", nullable = false)
