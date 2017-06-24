@@ -29,28 +29,27 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @Repository
-public class AppInfoRepositoryImpl extends GenericCRUDRepository<AppInfo>implements AppInfoRepository {
+public class AppInfoRepositoryImpl extends GenericCRUDRepository<AppInfo> implements AppInfoRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(AppInfoRepositoryImpl.class);
 
     @Autowired
     protected HibernateTransactionManager txManager;
 
-
     @Autowired
     private Scheduler scheduler;
-    
+
     @PostConstruct
-    private void init(){
+    private void init() {
         TransactionTemplate tmpl = new TransactionTemplate(txManager);
         tmpl.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus ts) {
                 List<AppInfo> infos = loadAll();
-                for(AppInfo info : infos){
+                for (AppInfo info : infos) {
                     try {
                         addNewJob(info);
-                        logger.info("Initialized job with id: "+info.getId());
+                        logger.info("Initialized job with id: " + info.getId());
                     } catch (SchedulerException ex) {
                         logger.error("Възникна грешка! ", ex);
                     }
@@ -59,10 +58,8 @@ public class AppInfoRepositoryImpl extends GenericCRUDRepository<AppInfo>impleme
         });
     }
 
-
-
     @Override
-    public void save(AppInfo entity) {
+    public AppInfo save(AppInfo entity) {
         boolean isNewEntity = entity.getId() == null;
         super.save(entity);
         if (!isNewEntity) {
@@ -78,7 +75,7 @@ public class AppInfoRepositoryImpl extends GenericCRUDRepository<AppInfo>impleme
                 logger.error("Възникна грешка! ", ex);
             }
         }
-
+        return entity;
     }
 
     private void addNewJob(AppInfo job) throws SchedulerException {

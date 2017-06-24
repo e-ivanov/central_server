@@ -46,6 +46,12 @@ public class ServerServiceImpl implements ServerService {
             serverFromDB.setName(entity.getName());
             serverFromDB.setNotificationPolicy(entity.getNotificationPolicy());
             serverFromDB.setActive(entity.isActive());
+            if(entity.getNotificationGroupSet() != null){
+                serverFromDB.setNotificationGroupSet(entity.getNotificationGroupSet());
+            }
+            if(entity.getUserSet() != null){
+                serverFromDB.setUserSet(entity.getUserSet());
+            }
             updateNotificationGroups(entity, serverFromDB);
             updateUsers(entity, serverFromDB);
             serverRepository.save(serverFromDB);
@@ -66,12 +72,12 @@ public class ServerServiceImpl implements ServerService {
         for (NotificationGroup group : removedGroups) {
             group.getServerSet().remove(oldEntity);
             notificationGroupService.save(group);
-            oldEntity.getNotificationGroupSet().remove(group);
+//            oldEntity.getNotificationGroupSet().remove(group);
         }
         for (NotificationGroup group : newGroups) {
             group.getServerSet().add(oldEntity);
             notificationGroupService.save(group);
-            oldEntity.getNotificationGroupSet().add(group);
+//            oldEntity.getNotificationGroupSet().add(group);
         }
     }
     private void updateUsers(Server newEntity, Server oldEntity) {
@@ -79,11 +85,13 @@ public class ServerServiceImpl implements ServerService {
         Set<User> newUsers = Sets.difference(newEntity.getUserSet(), oldEntity.getUserSet());
         for (User user : removedUsers) {
             user.getServerSet().remove(oldEntity);
-            oldEntity.getUserSet().remove(user);
+            userService.save(user);
+//            oldEntity.getUserSet().remove(user);
         }
         for (User user : newUsers) {
             user.getServerSet().add(oldEntity);
-            oldEntity.getUserSet().add(user);
+            userService.save(user);
+//            oldEntity.getUserSet().add(user);
         }
     }
 

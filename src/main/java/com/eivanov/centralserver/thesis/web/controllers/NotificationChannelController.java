@@ -78,7 +78,7 @@ public class NotificationChannelController {
     public AjaxFormResponse deleteChannel(HttpServletRequest request) {
         AjaxFormResponse response = new AjaxFormResponse();
         NotificationChannel channel = NotificationChannelFactory.createNotificationChannel(request);
-        notificationChannelService.delete(channel);
+        notificationChannelService.delete(notificationChannelService.load(channel.getId()));
         return response;
     }
 }

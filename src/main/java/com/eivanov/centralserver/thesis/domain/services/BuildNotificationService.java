@@ -17,7 +17,15 @@ import com.eivanov.centralserver.thesis.listeners.StatisticsInfoListener;
 import com.eivanov.centralserver.thesis.listeners.StatisticsUtils;
 import com.eivanov.centralserver.thesis.repository.SensorReadingRepository;
 import com.eivanov.centralserver.thesis.services.ServerService;
+import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.slf4j.Logger;
@@ -47,12 +55,13 @@ public class BuildNotificationService {
 
     public void processReading(NotificationData info) {
         logger.info("Processing notification Data");
+
         boolean canSendNotification = true;
-        int resendInterval = 25;
+        int resendInterval = info.getNotificationConfig().getNotificationInverval();
         DateTime latestNotification = getLatestNotification(info);
         if (latestNotification != null) {
                 Seconds diff = Seconds.secondsBetween(latestNotification, DateTime.now());
-                logger.info("The diff is :"+diff.toString());
+                logger.info("The diff is :"+info.getType()+diff.toString());
                 if (diff.getSeconds() < resendInterval) {
                     canSendNotification = false;
                 }
@@ -70,10 +79,15 @@ public class BuildNotificationService {
         Server server = serverService.load(info.getReading().getServerId());
         
         NotificationDTO dto = null;
-        if (StatisticsUtils.calculatePcnt(readings, info) >= info.getNotificationConfig().getCriticalLevel()) {
-            dto = NotificationFactory.buildResourceUsageNotification(server, NotificationType.CRITICAL, info.getType());
-        } else if (StatisticsUtils.calculatePcnt(readings, info) >= info.getNotificationConfig().getWarnLevel()) {
-            dto = NotificationFactory.buildResourceUsageNotification(server, NotificationType.WARN, info.getType());
+        float avgUsage = StatisticsUtils.calculatePcnt(readings, info);
+        if ( avgUsage >= info.getNotificationConfig().getCriticalLevel()) {
+            dto = NotificationFactory.buildResourceUsageNotification(server, 
+                                      NotificationType.CRITICAL, info,
+                                      avgUsage, readings);
+        } else if (avgUsage >= info.getNotificationConfig().getWarnLevel()) {
+            dto = NotificationFactory.buildResourceUsageNotification(server,
+                                           NotificationType.WARN, info,
+                                           avgUsage, readings);
         }
         if(dto != null){
             setLatestNotification(info);

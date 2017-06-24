@@ -23,9 +23,10 @@ public class GenericCRUDRepository<T> implements GenericCRUDInterface<T>{
     @Autowired
     private SessionFactory sessionFactory;
     
-    public void save(T entity){
+    public T save(T entity){
         T result =  (T)getCurrentSession().merge(entity);
         getCurrentSession().saveOrUpdate(result);
+        return result;
     }
     public  T load(long id){
         return (T)getCurrentSession().get(clazz, id);

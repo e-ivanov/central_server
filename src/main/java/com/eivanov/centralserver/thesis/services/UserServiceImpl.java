@@ -122,18 +122,18 @@ public class UserServiceImpl implements UserService {
             userRepository.save(userDB);
         } else {
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-            userRepository.save(entity);
-            for (Server server : entity.getServerSet()) {
-                server.getUserSet().add(entity);
+            User finalUser = (User)userRepository.save(entity);
+            for (Server server : finalUser.getServerSet()) {
+                server.getUserSet().add(finalUser);
                 serverService.save(server);
             }
-            for (AppInfo info : entity.getAppInfoSet()) {
-                info.getUserSet().add(entity);
+            for (AppInfo info : finalUser.getAppInfoSet()) {
+                info.getUserSet().add(finalUser);
                 appInfoService.save(info);
             }
 
-            for (NotificationGroup group : entity.getNotificationGroupSet()) {
-                group.getUserSet().add(entity);
+            for (NotificationGroup group : finalUser.getNotificationGroupSet()) {
+                group.getUserSet().add(finalUser);
                 notificationGroupService.save(group);
             }
         }

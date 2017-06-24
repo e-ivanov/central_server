@@ -5,9 +5,13 @@
  */
 package com.eivanov.centralserver.thesis.services;
 
+import com.eivanov.centralserver.thesis.entity.AppInfo;
 import com.eivanov.centralserver.thesis.entity.EmailNotification;
 import com.eivanov.centralserver.thesis.entity.NotificationChannel;
+import com.eivanov.centralserver.thesis.entity.ResourceNotificationPolicy;
+import com.eivanov.centralserver.thesis.repository.AppInfoRepository;
 import com.eivanov.centralserver.thesis.repository.NotificationChannelRepository;
+import com.eivanov.centralserver.thesis.repository.ResourceNotificationPolicyRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +21,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class NotificationChannelServiceImpl implements NotificationChannelService {
     
+    
+    @Autowired
+    private AppInfoService appInfoService;
+    
+    @Autowired
+    private ResourceNotificationPolicyService resourceNotificationPolicyService;
+    
     @Autowired
     private NotificationChannelRepository repository;
 
     @Override
     public void delete(NotificationChannel entity) {
+        for(ResourceNotificationPolicy policy : entity.getResourceNotificationPolicySet()){
+            policy.getNotificationChannelSet().remove(entity);
+            resourceNotificationPolicyService.save(policy);
+        }
+        
+        for(AppInfo appInfo : entity.getAppInfoSet()){
+            appInfo.getNotificationChannelSet().remove(entity);
+            appInfoService.save(appInfo);
+        }
+       
         repository.delete(entity);
     }
 

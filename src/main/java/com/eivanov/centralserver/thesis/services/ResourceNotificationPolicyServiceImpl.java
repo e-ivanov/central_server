@@ -27,6 +27,8 @@ public class ResourceNotificationPolicyServiceImpl implements ResourceNotificati
     @Autowired
     private ServerService serverService;
     
+    @Autowired NotificationChannelService notificationChannelService;
+    
     @Override
     public void save(ResourceNotificationPolicy entity) {
         if(entity.getId() != null){
@@ -36,12 +38,19 @@ public class ResourceNotificationPolicyServiceImpl implements ResourceNotificati
             rsDB.setDiskUsageResourceConfig(entity.getDiskUsageResourceConfig());
             rsDB.setName(entity.getName());
             rsDB.setServerUnresponsiveInterval(entity.getServerUnresponsiveInterval());
+            if(entity.getServerSet() != null){
+                rsDB.setServerSet(entity.getServerSet());
+            }
+            if(entity.getNotificationChannelSet() != null){
+                rsDB.setNotificationChannelSet(entity.getNotificationChannelSet());
+            }
             updateServers(entity, rsDB);
+            updateNotificationChannels(entity, rsDB);
             notificationPolicyRepository.save(rsDB);
         }else{
-            notificationPolicyRepository.save(entity);
-            for(Server server : entity.getServerSet()){
-                server.setNotificationPolicy(entity);
+            ResourceNotificationPolicy finalPolicy = (ResourceNotificationPolicy)notificationPolicyRepository.save(entity);
+            for(Server server : finalPolicy.getServerSet()){
+                server.setNotificationPolicy(finalPolicy);
                 serverService.save(server);
             }
         }
@@ -83,12 +92,23 @@ public class ResourceNotificationPolicyServiceImpl implements ResourceNotificati
             for (Server server : removedServers) {
                 server.setNotificationPolicy(null);
                 serverService.save(server);
-                oldEntity.getServerSet().remove(server);
             }
             for (Server server : newServers) {
                 server.setNotificationPolicy(oldEntity);
                 serverService.save(server);
-                oldEntity.getServerSet().add(server);
+            }
+    }
+    
+    private void updateNotificationChannels(ResourceNotificationPolicy newEntity, ResourceNotificationPolicy oldEntity){
+        Set<NotificationChannel> removedChannels = Sets.difference(oldEntity.getNotificationChannelSet(), newEntity.getNotificationChannelSet());
+            Set<NotificationChannel> newChannels = Sets.difference(newEntity.getNotificationChannelSet(), oldEntity.getNotificationChannelSet());
+            for (NotificationChannel nchannel : removedChannels) {
+                nchannel.getResourceNotificationPolicySet().remove(oldEntity);
+                notificationChannelService.save(nchannel);
+            }
+            for (NotificationChannel nchannel : newChannels) {
+                nchannel.getResourceNotificationPolicySet().add(oldEntity);
+                notificationChannelService.save(nchannel);
             }
     }
 }

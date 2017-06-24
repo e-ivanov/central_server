@@ -13,7 +13,7 @@ import org.hibernate.Session;
  * @author killer
  */
 public interface GenericCRUDInterface<T> {
-    public void save(T entity);
+    public T save(T entity);
     public T load(long id);
     public void delete (T entity);
     public void deleteAll(List<T> entities);

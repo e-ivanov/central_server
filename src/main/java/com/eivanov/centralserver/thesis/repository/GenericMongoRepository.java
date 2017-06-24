@@ -23,8 +23,9 @@ public class GenericMongoRepository<T> implements GenericCRUDInterface<T>{
     private MongoTemplate mongoTemplate;
     
     
-    public void save(T entity) {
+    public T save(T entity) {
         mongoTemplate.save(entity);
+        return entity;
     }
 
     public T load(long id) {

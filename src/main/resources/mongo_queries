@@ -1,1 +1,0 @@
-db.sensor_reading.aggregate([{$unwind: "$cpuData"},{$group: {_id: 2, avgAmount: {$avg: "$cpuData.usage"}}}])
