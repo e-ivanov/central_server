@@ -102,7 +102,9 @@ public class UserServiceImpl implements UserService {
             updateServers(entity, userDB);
             updateNotificationGroups(entity, userDB);
             updateAppInfo(entity, userDB);
-            userDB.setPassword(passwordEncoder.encode(entity.getPassword()));
+            if (!entity.getPassword().equals("")) {
+                userDB.setPassword(passwordEncoder.encode(entity.getPassword()));
+            }
             userDB.setEmail(entity.getEmail());
             userDB.setFirstName(entity.getFirstName());
             userDB.setLastName(entity.getLastName());
@@ -122,7 +124,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(userDB);
         } else {
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-            User finalUser = (User)userRepository.save(entity);
+            User finalUser = (User) userRepository.save(entity);
             for (Server server : finalUser.getServerSet()) {
                 server.getUserSet().add(finalUser);
                 serverService.save(server);
